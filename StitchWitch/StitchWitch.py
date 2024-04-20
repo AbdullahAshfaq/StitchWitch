@@ -19,15 +19,30 @@ def index() -> rx.Component:
         rx.hstack(
             rx.image(src="/logo.png", width="260px", height="auto", margin_left="30px", margin_top="23px"),
         ),
-        rx.heading("Live Procedure", margin_top="10px", margin_left="30px", margin_bottom="15px", font_size="30px"),
-        rx.vstack(
-            background_color="#222423",
-            height="63vh",
-            width="112vh",
-            margin_left="30px",
+        rx.hstack(
+            rx.vstack(
+                rx.heading("Live Procedure", margin_top="10px", margin_left="30px", margin_bottom="15px", font_size="30px"),
+                rx.vstack(
+                    background_color="#222423",
+                    height="63vh",
+                    width="112vh",
+                    margin_left="30px",
+                    border="3px solid green", 
+                ),
+            ),
+            rx.vstack(
+                rx.heading("Caption",margin_left="15px", margin_top="10px", margin_bottom="15px", font_size="30px"),
+                rx.vstack(
+                    background_color="#222423",
+                    margin_left="15px",
+                    width="55vh",
+                    height="75vh",
+                ),
+                flex="1",
+            )
         ),
-        rx.heading("Warnings", margin_top="10px", margin_left="30px", font_size="20px", color="orange"),
-        rx.heading("Dangers", margin_left="30px", font_size="20px", color="red"),
+        rx.heading("Warnings: ", margin_top="-90px", margin_left="30px", font_size="20px", color="orange"),
+        rx.heading("Dangers: ", margin_left="30px", margin_top="-10px", font_size="20px", color="red"),
     )
 
 app = rx.App(style=style)
