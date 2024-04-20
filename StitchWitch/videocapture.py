@@ -51,8 +51,9 @@ def capture_frames_from_video(video_path, output_folder, interval_sec):
         cap.release()
         cv2.destroyAllWindows()
 
-if __name__ == "__main__":
-    video_path = "sample-video.mp4"  # Path to input video file
+'''Main function to be called
+'''
+def analyze_video(video_path):
     output_folder = "captured_frames"  # Output folder to save captured frames
     interval_sec = 1  # Interval in seconds to capture frames
 
