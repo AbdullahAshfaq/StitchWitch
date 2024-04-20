@@ -133,4 +133,4 @@ var/
 venv.bak/
 venv/
 wheels/
-assets/video/
+assets/video/ 
