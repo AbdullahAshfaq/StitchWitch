@@ -132,3 +132,4 @@ venv.bak/
 venv/
 wheels/
 env.json
+assets/video/
