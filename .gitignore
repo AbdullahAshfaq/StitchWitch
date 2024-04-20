@@ -132,3 +132,4 @@ venv.bak/
 venv/
 wheels/
 captured_frames/
+env.json
