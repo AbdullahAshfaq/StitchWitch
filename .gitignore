@@ -98,6 +98,7 @@ MANIFEST
 __pycache__/
 __pypackages__/
 build/
+captured_frames/
 celerybeat-schedule
 celerybeat.pid
 cover/
@@ -112,6 +113,7 @@ docs/_build/
 downloads/
 eggs/
 env.bak/
+env.json
 env/
 htmlcov/
 instance/
@@ -131,4 +133,3 @@ var/
 venv.bak/
 venv/
 wheels/
-captured_frames/

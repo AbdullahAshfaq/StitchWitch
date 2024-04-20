@@ -1,65 +1,94 @@
+import asyncio
 import cv2
-from time import sleep
+from concurrent.futures import ThreadPoolExecutor
+import google.generativeai as genai
+import json
+import PIL.Image
+import os
 
-def capture_frames_from_video(video_path, output_folder, interval_sec):
-    # Open the video file
+async def gemini_call_async(output_folder, frame_count, frame_interval, model, executor):
+    safe = [
+        {
+            "category": "HARM_CATEGORY_DANGEROUS",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_NONE",
+        },
+    ]
+    
+    prompt = "Explain the image in 3 lines"
+    
+    # Asynchronously handle image processing and model invocation
+    def process_image():
+        img = PIL.Image.open(f"{output_folder}/frame_{frame_count // frame_interval}.jpg")
+        return model.generate_content([prompt, img], safety_settings=safe)
+
+    response = await asyncio.get_event_loop().run_in_executor(executor, process_image)
+    print(response.text)
+
+async def capture_frames_from_video_async(video_path, output_folder, interval_sec, model, executor):
     cap = cv2.VideoCapture(video_path)
-
-    # Check if the video file was opened successfully
     if not cap.isOpened():
         print(f"Error: Unable to open video file '{video_path}'")
         return
 
-    # Get the frame rate of the video
     fps = cap.get(cv2.CAP_PROP_FPS)
-
-    # Calculate frame interval based on desired interval_sec
     frame_interval = int(fps * interval_sec)
-
-    # Initialize frame counter
     frame_count = 0
 
-    try:
-        while True:
-            # Read a frame from the video
-            ret, frame = cap.read()
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-            if not ret:
-                break  # Break the loop if we've reached the end of the video
+        cv2.imshow("Video Playback", frame)
+        if frame_count % frame_interval == 0:
+            output_path = f"{output_folder}/frame_{frame_count // frame_interval}.jpg"
+            cv2.imwrite(output_path, frame)
+            print(f"Saved frame {frame_count // frame_interval}")
+            asyncio.create_task(gemini_call_async(output_folder, frame_count, frame_interval, model, executor))
 
-            # Display the current frame (video playback)
-            cv2.imshow("Video Playback", frame)
+        frame_count += 1
+        await asyncio.sleep(1 / fps if fps > 0 else 0.033)
 
-            # Check if it's time to save a frame
-            if frame_count % frame_interval == 0:
-                # Save the frame as an image file
-                output_path = f"{output_folder}/frame_{frame_count // frame_interval}.jpg"
-                cv2.imwrite(output_path, frame)
-                print(f"Saved frame {frame_count // frame_interval}")
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-            # Increment frame counter
-            frame_count += 1
-            #if (fps != 0):
-            sleep(1/fps)
+    cap.release()
+    cv2.destroyAllWindows()
 
-            # Check for key press (press 'q' to stop playback)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+async def analyze_video_async(video_path):
+    json_file_path = 'env.json'
+    with open(json_file_path, 'r') as file:
+        config = json.load(file)
+        google_api_key = config['GOOGLE_API_KEY']
 
-    finally:
-        # Release the video capture object and close any open windows
-        cap.release()
-        cv2.destroyAllWindows()
+    genai.configure(api_key=google_api_key)
+    model = genai.GenerativeModel('gemini-pro-vision')
+    output_folder = "captured_frames"
+    interval_sec = 5
 
-'''Main function to be called
-'''
-def analyze_video(video_path):
-    output_folder = "captured_frames"  # Output folder to save captured frames
-    interval_sec = 1  # Interval in seconds to capture frames
-
-    # Create the output folder if it doesn't exist
-    import os
     os.makedirs(output_folder, exist_ok=True)
 
-    # Call the function to capture frames from the video
-    capture_frames_from_video(video_path, output_folder, interval_sec)
+    executor = ThreadPoolExecutor(max_workers=4)
+    try:
+        await capture_frames_from_video_async(video_path, output_folder, interval_sec, model, executor)
+    finally:
+        executor.shutdown()
+
+if __name__ == "__main__":
+    asyncio.run(analyze_video_async('path_to_video.mp4'))
