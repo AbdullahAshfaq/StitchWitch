@@ -129,6 +129,8 @@ async def gemini_call_async(frames_path, diagrams_lst, diagram_desc, procedure_d
         temp = temp.replace('False','false')
         temp = temp.replace('True','true')
         temp = temp.replace('json','')
+        # Adding replacement for single quotes to double quotes
+        temp = temp.replace("'", '"')
         resp = json.loads(temp)
         resp['caption'] = chat_response
         resp['status'] = '200'
