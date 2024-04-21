@@ -155,7 +155,7 @@ def index() -> rx.Component:
                 padding="2em",
                 width="100%",
             ),
-            margin_top="7vh",  # Center horizontally
+            margin_top="5.5vh",  # Center horizontally
             align_items="center",
             width="100%",
             height="100%", 
@@ -188,16 +188,16 @@ def main() -> rx.Component:
                 width="100%",
                 
         ),
-        rx.container(
+
             rx.hstack(
                 rx.vstack(
                     rx.heading("Live Procedure", margin_top="10px", margin_left="30px", margin_bottom="15px", font_size="30px"),
                     rx.video(
                         url="../lumbar_discectomy.mp4",
-                        height="63vh",
-                        width="112vh",
+                        height="71.5vh",
+                        width="126vh",
                         margin_left="30px",
-                        border="3px solid green",
+                        border="4px solid green",
                         playing=State.click,
                         playbackRate='0.5',
                         muted=True,
@@ -213,26 +213,31 @@ def main() -> rx.Component:
                     width="100%",
                 ),
                 rx.spacer(),
-                rx.vstack(
-                    rx.heading("Caption",margin_left="15px", margin_top="10px", margin_bottom="15px", font_size="30px"),
+                rx.container(
                     rx.vstack(
-                        State.current_text,
-                        background_color="#222423",
-                        margin_left="15px",
-                        width="55vh",
-                        height="33vh",
+                        rx.heading("Observation", margin_top="10px", margin_bottom="15px", font_size="30px"),
+                        rx.vstack(
+                            State.current_text,
+                            background_color="#222423",
+                            width="57vh",
+                            height="32vh",
+                            padding="1.5em",
+                            
+                        ),
+                        rx.heading("Warnings", margin_top="10px", margin_bottom="15px", font_size="30px"),
+                        rx.vstack(
+                            background_color="#222423",
+                            width="57vh",
+                            height="32vh",
+                            padding="1.5em",
+                        ),
+                        flex="1",
+                        margin_right="30px",
                     ),
-                    rx.heading("Warnings",margin_left="15px", margin_top="10px", margin_bottom="15px", font_size="30px"),
-                    rx.vstack(
-                        background_color="#222423",
-                        margin_left="15px",
-                        width="55vh",
-                        height="33vh",
-                    ),
-                    flex="1",
                 ),
+                
+                width="100%",
             ),
-        ),
     )
     
 
