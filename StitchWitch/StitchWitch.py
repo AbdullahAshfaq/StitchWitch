@@ -133,7 +133,11 @@ def index() -> rx.Component:
                     rx.upload(
                         rx.vstack(
                             rx.heading("Drag and drop Medical Procedure here or click to select", size="5", margin_bottom="10px"),
-                            rx.button("Select PDF", color=color, bg="white", border=f"1.5px solid {color}", font_weight="600"),
+                            rx.cond(
+                                State.docs_exist==True,
+                                rx.button("✅ Selected", color=color, bg="white", border=f"1.5px solid {color}", font_weight="600"),
+                                rx.button("Select PDF", color=color, bg="white", border=f"1.5px solid {color}", font_weight="600"),
+                            ),
                             align_items="center",  # Center align items horizontally within the vertical stack
                             justify_content="center",  # Center content vertically within the container, if needed
                         ),

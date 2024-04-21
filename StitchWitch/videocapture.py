@@ -128,6 +128,8 @@ async def gemini_call_async(frames_path, diagrams_lst, diagram_desc, procedure_d
         temp = re.findall('{(?:[^{}])*}',alert_response)[0]
         temp = temp.replace('False','false')
         temp = temp.replace('True','true')
+        temp = temp.replace('"true"',"true")
+        temp = temp.replace("true",'"true"')
         temp = temp.replace('json','')
         # Adding replacement for single quotes to double quotes
         temp = temp.replace("'", '"')
