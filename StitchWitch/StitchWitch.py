@@ -96,6 +96,7 @@ def index() -> rx.Component:
                     font_size="60px",
                     # background_image= "linear-gradient(95deg, #D6D6ED 42.14%, #727280 63.21%)",
                     style={
+
                         "color": "transparent",
                         "background-image": "linear-gradient(95deg, #D6D6ED 42.14%, #727280 63.21%)",
                         "background-clip": "text",
@@ -105,6 +106,7 @@ def index() -> rx.Component:
                         "padding-top": "20px",  # Add padding at the top
                     },
                     height="auto",
+                    
             ),
             rx.heading(
                 "the modern AI surgery assistant",
@@ -118,7 +120,8 @@ def index() -> rx.Component:
                         "line-height": "1.2",  # Increased line height  # Add padding at the top
                         "padding-bottom": "20px",  # Add padding at the bottom
                     },
-                margin_top="-18px"
+                margin_top="-18px",
+               
             ),
             rx.vstack(
                 rx.center(
@@ -251,16 +254,21 @@ def main() -> rx.Component:
                     ),
                     rx.cond(
                         State.project_name == "lumbar_discectomy",
-                        rx.video(
+                        rx.vstack(
+                            rx.video(
                             url="../lumbar_discectomy.mp4",
                             height="68.2vh",
                             width="120.6vh",
-                            margin_left="50px",
-                            border=f"4px solid {State.warning_color}",
+                            
                             playing=State.click,
                             playbackRate='0.5',
                             muted=True,
-                            controls=False
+                            controls=False,
+                        ),
+                        height="69.2vh",
+                        width="121.6vh",
+                        border=f"4px solid {State.warning_color}",
+                        margin_left="50px",
                         ),
                         rx.chakra.skeleton()
                     ),
@@ -314,11 +322,6 @@ def main() -> rx.Component:
                         rx.cond(
                             State.danger == "true",
                             rx.vstack(
-                                # State.danger_detail,
-                                # border_update = "4px solid green"
-                                warning_color = "green"
-                            ),
-                            rx.vstack(
                                  State.danger_detail,
                                  margin_top="30px",
                                 color="red",
@@ -327,8 +330,9 @@ def main() -> rx.Component:
                             ),
                             rx.vstack(
                                 # State.danger_detail,
-                                # margin_top="30px",
-                                # color="red"
+                                # border_update = "4px solid green"
+                                warning_color = "green"
+                                
                             ),
                         ),
                         background_color="#222423",
