@@ -245,9 +245,10 @@ def main() -> rx.Component:
                         rx.cond(
                             State.danger == "true",
                             rx.vstack(
-                                State.danger_detail,
+                                # State.danger_detail,
                             ),
                             rx.vstack(
+                                 State.danger_detail,
                             ),
                         ),
                         background_color="#222423",
