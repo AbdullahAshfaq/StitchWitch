@@ -1,7 +1,8 @@
 from rxconfig import config
 import reflex as rx
 # from .videocapture import capture_frames_from_video_async
-
+import asyncio
+from .videocapture import *
 video_exist = 0
 # warning = 0
 
@@ -39,8 +40,35 @@ class State(rx.State):
 
 
 color = "#ab8bff"
+    current_text = ""
+    click = False
 
+    async def run(self):
+        executor = ThreadPoolExecutor(max_workers=1)
+        # await asyncio.sleep(1)
+        try:
+            async for response,click in analyze_video_async("lumbar_discectomy"):
+                self.current_text=response['caption']
+                self.click=click
+                # print(self.current_text)
+                yield
+        finally:
+            executor.shutdown()
+        # print(self.current_text)
+
+# class CondState(rx.State):
+#     show: bool = True
+
+#     async def change(self):
+#         asyncio.run(analyze_video_async("assets/video/eye_surgery.mp4"))
+#         self.show = not (self.show)
+
+
+@rx.page(on_load=State.run)
 def index() -> rx.Component:
+
+    # asyncio.run(analyze_video_async("assets/video/eye_surgery.mp4"))
+
     return rx.vstack(
         rx.hstack(
             rx.image(src="/logo.png", width="260px", height="auto", margin_left="30px", margin_top="23px"),
