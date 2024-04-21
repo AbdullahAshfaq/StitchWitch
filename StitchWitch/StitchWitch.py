@@ -256,6 +256,15 @@ def main() -> rx.Component:
                         rx.heading("Observation", margin_top="10px", margin_bottom="15px", font_size="30px"),
                         rx.vstack(
                             State.current_text,
+                            rx.cond(
+                                State.click,
+                                rx.vstack(
+                                    rx.text("1")
+                                ),
+                                rx.vstack(
+                                    rx.text("2")
+                                ),
+                            ),
                             background_color="#222423",
                             width="57vh",
                             height="30.7vh",
