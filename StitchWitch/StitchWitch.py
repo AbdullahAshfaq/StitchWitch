@@ -15,6 +15,7 @@ style = {
         # "display": "flex",
         "overflow": "hidden",
     }
+color = "#ab8bff"
 
 class State(rx.State):
     # video_exist = 0
@@ -23,6 +24,8 @@ class State(rx.State):
     """The app state."""
     videos: list[str] = []
     video_exist: int = 0  # Manage video_exist as part of the staㄴte
+    current_text = ""
+    click = False
 
     async def handle_upload(self, files: list[rx.UploadFile]):
         """Handle the upload of video file(s)."""
@@ -35,13 +38,6 @@ class State(rx.State):
 
         # Update video_exist based on the presence of videos
         self.video_exist = 1 if self.videos else 0
-        
-    
-
-
-color = "#ab8bff"
-    current_text = ""
-    click = False
 
     async def run(self):
         executor = ThreadPoolExecutor(max_workers=1)
@@ -56,15 +52,6 @@ color = "#ab8bff"
             executor.shutdown()
         # print(self.current_text)
 
-# class CondState(rx.State):
-#     show: bool = True
-
-#     async def change(self):
-#         asyncio.run(analyze_video_async("assets/video/eye_surgery.mp4"))
-#         self.show = not (self.show)
-
-
-@rx.page(on_load=State.run)
 def index() -> rx.Component:
 
     # asyncio.run(analyze_video_async("assets/video/eye_surgery.mp4"))
@@ -178,7 +165,7 @@ def index() -> rx.Component:
         
     )
 
-
+@rx.page(on_load=State.run)
 def main() -> rx.Component:
     return rx.vstack(
         rx.hstack(
@@ -206,12 +193,15 @@ def main() -> rx.Component:
                 rx.vstack(
                     rx.heading("Live Procedure", margin_top="10px", margin_left="30px", margin_bottom="15px", font_size="30px"),
                     rx.video(
-                        url="../sample-video.mp4",
+                        url="../lumbar_discectomy.mp4",
                         height="63vh",
                         width="112vh",
-                        
                         margin_left="30px",
-                        border="3px solid green", 
+                        border="3px solid green",
+                        playing=State.click,
+                        playbackRate='0.5',
+                        muted=True,
+                        controls=False
                     ),
                     # rx.vstack(
                     #     background_color="#222423",
@@ -226,6 +216,7 @@ def main() -> rx.Component:
                 rx.vstack(
                     rx.heading("Caption",margin_left="15px", margin_top="10px", margin_bottom="15px", font_size="30px"),
                     rx.vstack(
+                        State.current_text,
                         background_color="#222423",
                         margin_left="15px",
                         width="55vh",
