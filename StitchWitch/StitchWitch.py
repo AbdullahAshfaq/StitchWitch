@@ -3,6 +3,8 @@ import reflex as rx
 # from .videocapture import capture_frames_from_video_async
 import asyncio
 from .videocapture import *
+from .about import about
+
 video_exist = 0
 # warning = 0
 
@@ -58,7 +60,17 @@ def index() -> rx.Component:
 
     return rx.vstack(
         rx.hstack(
-            rx.image(src="/logo.png", width="260px", height="auto", margin_left="30px", margin_top="23px"),
+            rx.link(rx.image(src="/logo.png", width="260px", height="auto", margin_left="30px", margin_top="23px"),href="../",),
+            rx.spacer(),
+            rx.link(rx.text("About"),margin_right="50px", margin_top="30px", color="white", 
+                _hover={
+                            "opacity": 0.7,
+                        },
+                        box_shadow="rgba(151, 65, 252, 0.8) 0 15px 30px -10px",
+                        font_weight="600"
+                        ,href="/about",
+                        ),
+                        width="100%",
         ),
         rx.vstack(
             rx.heading(
@@ -169,7 +181,7 @@ def index() -> rx.Component:
 def main() -> rx.Component:
     return rx.vstack(
         rx.hstack(
-            rx.image(src="/logo.png", width="260px", height="auto", margin_left="30px", margin_top="23px"),
+            rx.link(rx.image(src="/logo.png", width="260px", height="auto", margin_left="30px", margin_top="23px"),href="../",),
             rx.spacer(),
             rx.link(rx.button(
                 "← Back", margin_right="30px", margin_top="40px", color="white", 
@@ -191,12 +203,12 @@ def main() -> rx.Component:
 
             rx.hstack(
                 rx.vstack(
-                    rx.heading("Live Procedure", margin_top="10px", margin_left="30px", margin_bottom="15px", font_size="30px"),
+                    rx.heading("Live Procedure", margin_top="10px", margin_left="50px", margin_bottom="15px", font_size="30px"),
                     rx.video(
                         url="../lumbar_discectomy.mp4",
-                        height="71.5vh",
-                        width="126vh",
-                        margin_left="30px",
+                        height="68.2vh",
+                        width="120.6vh",
+                        margin_left="50px",
                         border="4px solid green",
                         playing=State.click,
                         playbackRate='0.5',
@@ -220,7 +232,7 @@ def main() -> rx.Component:
                             State.current_text,
                             background_color="#222423",
                             width="57vh",
-                            height="32vh",
+                            height="30.7vh",
                             padding="1.5em",
                             
                         ),
@@ -228,17 +240,17 @@ def main() -> rx.Component:
                         rx.vstack(
                             background_color="#222423",
                             width="57vh",
-                            height="32vh",
+                            height="30.7vh",
                             padding="1.5em",
                         ),
                         flex="1",
-                        margin_right="30px",
+                        margin_right="50px",
                     ),
                 ),
                 
                 width="100%",
             ),
-    )
+    )   
     
 
 
@@ -246,3 +258,4 @@ def main() -> rx.Component:
 app = rx.App(style=style)
 app.add_page(index)
 app.add_page(main, route="/main")
+app.add_page(about)
