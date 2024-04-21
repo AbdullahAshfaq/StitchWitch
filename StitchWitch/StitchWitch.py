@@ -14,13 +14,16 @@ style = {
 
 class State(rx.State):
     """The app state."""
-    current_text = "initial text"
+    current_text = ""
+    click = False
 
     async def run(self):
         executor = ThreadPoolExecutor(max_workers=1)
+        # await asyncio.sleep(1)
         try:
-            async for response in analyze_video_async("assets/video/eye_surgery.mp4"):
+            async for response,click in analyze_video_async("assets/video/eye_surgery.mp4"):
                 self.current_text=response
+                self.click=click
                 # print(self.current_text)
                 yield
         finally:
@@ -59,12 +62,14 @@ def index() -> rx.Component:
                 #     ),
                 # ),
                 rx.video(
-                    url="sample-video.mp4",
+                    url="video/eye_surgery.mp4",
                     height="63vh",
                     width="112vh",
                     margin_left="30px",
                     border="3px solid green",
-                    playing=True,
+                    playing=State.click,
+                    muted=True,
+                    controls=False
                     ),
             ),
             rx.vstack(

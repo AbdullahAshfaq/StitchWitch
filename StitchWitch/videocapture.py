@@ -91,7 +91,7 @@ async def analyze_video_async(video_path):
     executor = ThreadPoolExecutor(max_workers=4)
     try:
         async for response in capture_frames_from_video_async(video_path, output_folder, interval_sec, model, executor):
-            yield response
+            yield (response,True)
     finally:
         executor.shutdown()
 
