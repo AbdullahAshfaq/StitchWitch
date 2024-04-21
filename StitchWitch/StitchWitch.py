@@ -62,7 +62,7 @@ class State(rx.State):
                 self.danger_detail=response['danger_detail']
                 self.click=click
                 # print(self.current_text)
-                if self.danger:
+                if self.danger == "true":
                     self.warning_color = "red"
                 else:
                     self.warning_color = "green"
@@ -274,31 +274,41 @@ def main() -> rx.Component:
                     ),
                     rx.cond(
                         State.project_name == "cataract_surgery",
-                        rx.video(
+                        rx.vstack(
+                            rx.video(
                             url="../cataract_surgery.mp4",
                             height="68.2vh",
                             width="120.6vh",
-                            margin_left="50px",
-                            border=f"4px solid {State.warning_color}",
+                            
                             playing=State.click,
                             playbackRate='0.5',
                             muted=True,
-                            controls=False
+                            controls=False,
+                        ),
+                        height="69.2vh",
+                        width="121.6vh",
+                        border=f"4px solid {State.warning_color}",
+                        margin_left="50px",
                         ),
                         rx.chakra.skeleton()
                     ),
                     rx.cond(
                         State.project_name == "heart_transplant",
-                        rx.video(
+                        rx.vstack(
+                            rx.video(
                             url="../heart_transplant.mp4",
                             height="68.2vh",
                             width="120.6vh",
-                            margin_left="50px",
-                            border=f"4px solid {State.warning_color}",
+                            
                             playing=State.click,
                             playbackRate='0.5',
                             muted=True,
-                            controls=False
+                            controls=False,
+                        ),
+                        height="69.2vh",
+                        width="121.6vh",
+                        border=f"4px solid {State.warning_color}",
+                        margin_left="50px",
                         ),
                         rx.chakra.skeleton()
                     ),
