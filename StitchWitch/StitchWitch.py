@@ -237,16 +237,50 @@ def main() -> rx.Component:
                         ),
                         rx.heading("Live Procedure",  font_size="30px",margin_top="10px", margin_left="8px", margin_bottom="15px"),
                     ),
-                    rx.video(
-                        url="../lumbar_discectomy.mp4",
-                        height="68.2vh",
-                        width="120.6vh",
-                        margin_left="50px",
-                        border="4px solid green",
-                        playing=State.click,
-                        playbackRate='0.5',
-                        muted=True,
-                        controls=False
+                    rx.cond(
+                        State.project_name == "lumbar_discectomy",
+                        rx.video(
+                            url="../lumbar_discectomy.mp4",
+                            height="68.2vh",
+                            width="120.6vh",
+                            margin_left="50px",
+                            border="4px solid green",
+                            playing=State.click,
+                            playbackRate='0.5',
+                            muted=True,
+                            controls=False
+                        ),
+                        rx.chakra.skeleton()
+                    ),
+                    rx.cond(
+                        State.project_name == "cataract_surgery",
+                        rx.video(
+                            url="../cataract_surgery.mp4",
+                            height="68.2vh",
+                            width="120.6vh",
+                            margin_left="50px",
+                            border="4px solid green",
+                            playing=State.click,
+                            playbackRate='0.5',
+                            muted=True,
+                            controls=False
+                        ),
+                        rx.chakra.skeleton()
+                    ),
+                    rx.cond(
+                        State.project_name == "heart_transplant",
+                        rx.video(
+                            url="../heart_transplant.mp4",
+                            height="68.2vh",
+                            width="120.6vh",
+                            margin_left="50px",
+                            border="4px solid green",
+                            playing=State.click,
+                            playbackRate='0.5',
+                            muted=True,
+                            controls=False
+                        ),
+                        rx.chakra.skeleton()
                     ),
                     width="100%",
                 ),
@@ -256,15 +290,6 @@ def main() -> rx.Component:
                         rx.heading("Observation", margin_top="10px", margin_bottom="15px", font_size="30px"),
                         rx.vstack(
                             State.current_text,
-                            rx.cond(
-                                State.click,
-                                rx.vstack(
-                                    rx.text("1")
-                                ),
-                                rx.vstack(
-                                    rx.text("2")
-                                ),
-                            ),
                             background_color="#222423",
                             width="57vh",
                             height="30.7vh",
@@ -275,14 +300,16 @@ def main() -> rx.Component:
                         rx.vstack(
                             State.warning,
                         rx.cond(
-                            State.danger == "true",
+                            (State.danger == "true") | (State.danger == 'true'),
                             rx.vstack(
-                                # State.danger_detail,
+                                State.danger_detail,
+                                margin_top="30px",
+                                color="red"
                             ),
                             rx.vstack(
-                                 State.danger_detail,
-                                 margin_top="30px",
-                                color="red"
+                                # State.danger_detail,
+                                # margin_top="30px",
+                                # color="red"
                             ),
                         ),
                         background_color="#222423",

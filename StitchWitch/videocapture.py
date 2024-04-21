@@ -9,7 +9,7 @@ from functools import partial
 import re
 import glob
 from pypdf import PdfReader
-
+import ast
 
 # Global agents
 img_model = genai.GenerativeModel('gemini-pro-vision')
@@ -116,6 +116,7 @@ async def gemini_call_async(frames_path, diagrams_lst, diagram_desc, procedure_d
     try:
         alert_response = await asyncio.get_event_loop().run_in_executor(executor, lambda: alert_agent_call(alert_prompt))
         print(alert_response)
+        print(type(alert_response))
     except Exception as e:
         print(e)
         return 'ERROR'
@@ -126,7 +127,7 @@ async def gemini_call_async(frames_path, diagrams_lst, diagram_desc, procedure_d
     try:
         temp = re.findall('{(?:[^{}])*}',alert_response)[0]
         temp = temp.replace('False','false')
-        temp = temp.replace('True','false')
+        temp = temp.replace('True','true')
         temp = temp.replace('json','')
         resp = json.loads(temp)
         resp['caption'] = chat_response
