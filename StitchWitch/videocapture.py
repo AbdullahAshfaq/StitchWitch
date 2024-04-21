@@ -134,6 +134,7 @@ async def gemini_call_async(frames_path, diagrams_lst, diagram_desc, procedure_d
 
     except Exception as e:
         resp['status'] = '500'
+        resp['caption'] = ''
         # print(resp)
         print(e)
 

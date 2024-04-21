@@ -149,6 +149,7 @@ def index() -> rx.Component:
                         justify_content="center",
                         margin_top="40px",
                     ),
+                    width="100%"
                 ),
                 rx.center(
                     rx.cond(
@@ -229,11 +230,12 @@ def main() -> rx.Component:
                 rx.vstack(
                     rx.hstack(
                         rx.chakra.stack(
-                            rx.chakra.skeleton_circle(size="10px"),
-                            width="15px",
-                            margin_top="10px", margin_left="50px", margin_bottom="15px",
+                            rx.chakra.skeleton_circle(size="10px",start_color="red",width="20px",),
+                            margin_top="17px", margin_left="50px", margin_bottom="15px",
+                            height="20px",
+                            border_radius="200px",
                         ),
-                        rx.heading("Live Procedure",  font_size="30px"),
+                        rx.heading("Live Procedure",  font_size="30px",margin_top="10px", margin_left="8px", margin_bottom="15px"),
                     ),
                     rx.video(
                         url="../lumbar_discectomy.mp4",
@@ -270,12 +272,15 @@ def main() -> rx.Component:
                             ),
                             rx.vstack(
                                  State.danger_detail,
+                                 margin_top="30px",
+                                color="red"
                             ),
                         ),
                         background_color="#222423",
                             width="57vh",
                             height="30.7vh",
                             padding="1.5em",
+                            color="orange",
                         ),
                         flex="1",
                         margin_right="50px",
