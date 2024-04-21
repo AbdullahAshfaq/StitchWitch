@@ -9,6 +9,7 @@ from pathlib import Path  # Import Path from pathlib module
 
 docs_exist = 0
 # warning = 0
+# warning_color = "green"
 
 style = {
         "background-color": "#0C0E11",  # Dark background color
@@ -34,6 +35,7 @@ class State(rx.State):
     click = False
     project_name = ""
     file_loc = "data/docs/lumbar_discectomy.pdf"
+    warning_color = "green"
 
     async def handle_upload(self, files: list[rx.UploadFile]):
         """Handle the upload of a PDF file."""
@@ -60,6 +62,11 @@ class State(rx.State):
                 self.danger_detail=response['danger_detail']
                 self.click=click
                 # print(self.current_text)
+                if self.danger:
+                    self.warning_color = "red"
+                else:
+                    self.warning_color = "green"
+
                 yield
         finally:
             executor.shutdown()
@@ -238,17 +245,26 @@ def main() -> rx.Component:
                         ),
                         rx.heading("Live Procedure",  font_size="30px",margin_top="10px", margin_left="8px", margin_bottom="15px"),
                     ),
-                    rx.video(
-                        url="../lumbar_discectomy.mp4",
+                    rx.hstack(
+                        rx.video(
+                            url="../lumbar_discectomy.mp4",
+                            height="68.2vh",
+                            width="120.6vh",
+                            # margin_left="50px",
+                            # border=f"3px solid {State.warning_color}",
+                            playing=State.click,
+                            playbackRate='0.5',
+                            muted=True,
+                            controls=False,
+                            margin_top="-2px"
+                        ),
                         height="68.2vh",
                         width="120.6vh",
                         margin_left="50px",
-                        border="4px solid green",
-                        playing=State.click,
-                        playbackRate='0.5',
-                        muted=True,
-                        controls=False
+                        border=f"3px solid {State.warning_color}",
+                        
                     ),
+                    
                     width="100%",
                 ),
                 rx.spacer(),
@@ -270,16 +286,20 @@ def main() -> rx.Component:
                             State.danger == "true",
                             rx.vstack(
                                 # State.danger_detail,
+                                # border_update = "4px solid green"
+                                warning_color = "green"
                             ),
                             rx.vstack(
                                  State.danger_detail,
                                  margin_top="30px",
-                                color="red"
+                                color="red",
+                                # border_update = "4px solid red"
+                                warning_color = "red"
                             ),
                         ),
                         background_color="#222423",
                             width="57vh",
-                            height="30.7vh",
+                            height="40vh",
                             padding="1.5em",
                             color="orange",
                         ),
@@ -300,7 +320,7 @@ def main() -> rx.Component:
                     ),
                 ),
                 width="100%",
-                margin_top="-400px",
+                margin_top="-500px",
                 margin_left="-300px"
             ),    
     )   
