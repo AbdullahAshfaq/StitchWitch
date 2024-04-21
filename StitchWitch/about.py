@@ -42,15 +42,10 @@ def about() -> rx.Component:
                 margin_top="20px",
                 font_size="30px"
             ),
-            rx.text(
-                "According to HSS, 22% of the medical problems are from procedure surgery"
-                "and we thought that AI could help to solve this problem.",
-                font_size="18px"
-            ),
-            rx.text(
-                "and we thought that AI could help to solve this problem.",
-                font_size="18px"
-            ),
+            
+            rx.text("According to HSS, 22% of the medical problems are from procedure surgery", font_size="18px"),
+            rx.text("and we thought that AI could help to solve this problem.", font_size="18px",margin_top="-10px"),
+            
             rx.heading(
                 "Our Proud Developers",
                 margin_top="20px",

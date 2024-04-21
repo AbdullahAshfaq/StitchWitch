@@ -203,7 +203,14 @@ def main() -> rx.Component:
 
             rx.hstack(
                 rx.vstack(
-                    rx.heading("Live Procedure", margin_top="10px", margin_left="50px", margin_bottom="15px", font_size="30px"),
+                    rx.hstack(
+                        rx.chakra.stack(
+                            rx.chakra.skeleton_circle(size="10px"),
+                            width="15px",
+                            margin_top="10px", margin_left="50px", margin_bottom="15px",
+                        ),
+                        rx.heading("Live Procedure",  font_size="30px"),
+                    ),
                     rx.video(
                         url="../lumbar_discectomy.mp4",
                         height="68.2vh",
