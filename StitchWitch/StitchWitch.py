@@ -141,7 +141,11 @@ def index() -> rx.Component:
                     rx.upload(
                         rx.vstack(
                             rx.heading("Drag and drop Medical Procedure here or click to select", size="5", margin_bottom="10px"),
-                            rx.button("Select PDF", color=color, bg="white", border=f"1.5px solid {color}", font_weight="600"),
+                            rx.cond(
+                                State.docs_exist==True,
+                                rx.button("✅ Selected", color=color, bg="white", border=f"1.5px solid {color}", font_weight="600"),
+                                rx.button("Select PDF", color=color, bg="white", border=f"1.5px solid {color}", font_weight="600"),
+                            ),
                             align_items="center",  # Center align items horizontally within the vertical stack
                             justify_content="center",  # Center content vertically within the container, if needed
                         ),
@@ -245,26 +249,51 @@ def main() -> rx.Component:
                         ),
                         rx.heading("Live Procedure",  font_size="30px",margin_top="10px", margin_left="8px", margin_bottom="15px"),
                     ),
-                    rx.hstack(
+                    rx.cond(
+                        State.project_name == "lumbar_discectomy",
                         rx.video(
                             url="../lumbar_discectomy.mp4",
                             height="68.2vh",
                             width="120.6vh",
-                            # margin_left="50px",
-                            # border=f"3px solid {State.warning_color}",
+                            margin_left="50px",
+                            border=f"4px solid {State.warning_color}",
                             playing=State.click,
                             playbackRate='0.5',
                             muted=True,
-                            controls=False,
-                            margin_top="-2px"
+                            controls=False
                         ),
-                        height="68.2vh",
-                        width="120.6vh",
-                        margin_left="50px",
-                        border=f"3px solid {State.warning_color}",
-                        
+                        rx.chakra.skeleton()
                     ),
-                    
+                    rx.cond(
+                        State.project_name == "cataract_surgery",
+                        rx.video(
+                            url="../cataract_surgery.mp4",
+                            height="68.2vh",
+                            width="120.6vh",
+                            margin_left="50px",
+                            border=f"4px solid {State.warning_color}",
+                            playing=State.click,
+                            playbackRate='0.5',
+                            muted=True,
+                            controls=False
+                        ),
+                        rx.chakra.skeleton()
+                    ),
+                    rx.cond(
+                        State.project_name == "heart_transplant",
+                        rx.video(
+                            url="../heart_transplant.mp4",
+                            height="68.2vh",
+                            width="120.6vh",
+                            margin_left="50px",
+                            border=f"4px solid {State.warning_color}",
+                            playing=State.click,
+                            playbackRate='0.5',
+                            muted=True,
+                            controls=False
+                        ),
+                        rx.chakra.skeleton()
+                    ),
                     width="100%",
                 ),
                 rx.spacer(),
@@ -295,6 +324,11 @@ def main() -> rx.Component:
                                 color="red",
                                 # border_update = "4px solid red"
                                 warning_color = "red"
+                            ),
+                            rx.vstack(
+                                # State.danger_detail,
+                                # margin_top="30px",
+                                # color="red"
                             ),
                         ),
                         background_color="#222423",

@@ -1,2 +1,6 @@
-reflex==0.4.8.post1
+google-generativeai==0.5.2
+grpcio-status==1.62.2
 opencv-python==4.9.0.80
+pillow==10.3.0
+pypdf==4.2.0
+reflex-webcam==0.0.5
