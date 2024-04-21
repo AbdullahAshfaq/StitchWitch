@@ -6,6 +6,7 @@ from .videocapture import *
 from .about import about
 
 from pathlib import Path  # Import Path from pathlib module
+
 docs_exist = 0
 # warning = 0
 
@@ -256,15 +257,6 @@ def main() -> rx.Component:
                         rx.heading("Observation", margin_top="10px", margin_bottom="15px", font_size="30px"),
                         rx.vstack(
                             State.current_text,
-                            rx.cond(
-                                State.click,
-                                rx.vstack(
-                                    rx.text("1")
-                                ),
-                                rx.vstack(
-                                    rx.text("2")
-                                ),
-                            ),
                             background_color="#222423",
                             width="57vh",
                             height="30.7vh",
@@ -298,6 +290,19 @@ def main() -> rx.Component:
                 
                 width="100%",
             ),
+            rx.center(
+                rx.cond(
+                    State.click,
+                    rx.vstack(
+                    ),
+                    rx.chakra.hstack(
+                        rx.chakra.circular_progress(is_indeterminate=True, size="100px", color="#7244ee"),
+                    ),
+                ),
+                width="100%",
+                margin_top="-400px",
+                margin_left="-300px"
+            ),    
     )   
     
 
