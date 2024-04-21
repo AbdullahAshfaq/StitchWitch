@@ -97,6 +97,7 @@ ENV/
 MANIFEST
 __pycache__/
 __pypackages__/
+assets/video/
 build/
 captured_frames/
 celerybeat-schedule
@@ -133,6 +134,3 @@ var/
 venv.bak/
 venv/
 wheels/
-captured_frames/
-env.json
-assets/video/ 

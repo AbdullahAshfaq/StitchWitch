@@ -21,8 +21,8 @@ class State(rx.State):
         executor = ThreadPoolExecutor(max_workers=1)
         # await asyncio.sleep(1)
         try:
-            async for response,click in analyze_video_async("assets/video/eye_surgery.mp4"):
-                self.current_text=response
+            async for response,click in analyze_video_async("lumbar_discectomy"):
+                self.current_text=response['caption']
                 self.click=click
                 # print(self.current_text)
                 yield
@@ -62,12 +62,13 @@ def index() -> rx.Component:
                 #     ),
                 # ),
                 rx.video(
-                    url="video/eye_surgery.mp4",
+                    url="lumbar_discectomy.mp4",
                     height="63vh",
                     width="112vh",
                     margin_left="30px",
                     border="3px solid green",
                     playing=State.click,
+                    playbackRate='0.5',
                     muted=True,
                     controls=False
                     ),
