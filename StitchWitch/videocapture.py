@@ -39,6 +39,8 @@ async def gemini_call_async(output_folder, frame_count, frame_interval, model, e
 
     response = await asyncio.get_event_loop().run_in_executor(executor, process_image)
     print(response.text)
+    return response.text
+
 
 async def capture_frames_from_video_async(video_path, output_folder, interval_sec, model, executor):
     cap = cv2.VideoCapture(video_path)
@@ -55,12 +57,14 @@ async def capture_frames_from_video_async(video_path, output_folder, interval_se
         if not ret:
             break
 
-        cv2.imshow("Video Playback", frame)
+        # cv2.imshow("Video Playback", frame)
         if frame_count % frame_interval == 0:
             output_path = f"{output_folder}/frame_{frame_count // frame_interval}.jpg"
             cv2.imwrite(output_path, frame)
             print(f"Saved frame {frame_count // frame_interval}")
-            asyncio.create_task(gemini_call_async(output_folder, frame_count, frame_interval, model, executor))
+            response = await asyncio.create_task(gemini_call_async(output_folder, frame_count, frame_interval, model, executor))
+            # print(response)
+            yield response
 
         frame_count += 1
         await asyncio.sleep(1 / fps if fps > 0 else 0.033)
@@ -86,7 +90,8 @@ async def analyze_video_async(video_path):
 
     executor = ThreadPoolExecutor(max_workers=4)
     try:
-        await capture_frames_from_video_async(video_path, output_folder, interval_sec, model, executor)
+        async for response in capture_frames_from_video_async(video_path, output_folder, interval_sec, model, executor):
+            yield response
     finally:
         executor.shutdown()
 
