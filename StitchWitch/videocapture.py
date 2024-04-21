@@ -1,6 +1,5 @@
 import asyncio
 import cv2
-import reflex_webcam as webcam
 from concurrent.futures import ThreadPoolExecutor
 import google.generativeai as genai
 import json
@@ -141,7 +140,7 @@ async def gemini_call_async(frames_path, diagrams_lst, diagram_desc, procedure_d
     return resp
 
 
-def get_instructional_material(project_name):
+def get_instructional_material(project_name,file_loc):
     print(f"## Reading Instructional Material: {project_name}")
     # Read all imgs in project folder
     print(f"./data/img/{project_name}/*")
@@ -155,7 +154,7 @@ def get_instructional_material(project_name):
     labels = img_model.generate_content([prompt] + diagrams_lst , safety_settings=safe)
     
     # Reading standard procedure doc
-    pdf_file = PdfReader(f"data/docs/{project_name}.pdf")
+    pdf_file = PdfReader(file_loc)
 
     # Find procedure for surgery_name
     all_txt = ''
@@ -170,10 +169,10 @@ def get_instructional_material(project_name):
     return (diagrams_lst, labels.text, surgery_procedure.text)
 
     
-async def capture_frames_from_video_async(video_path, output_folder, KPS, project_name, executor):
+async def capture_frames_from_video_async(video_path, output_folder, KPS, project_name, executor,file_loc):
     
     # Reading docs
-    diagrams_lst, diagram_desc, procedure_doc = get_instructional_material(project_name)
+    diagrams_lst, diagram_desc, procedure_doc = get_instructional_material(project_name,file_loc)
     
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
@@ -188,9 +187,20 @@ async def capture_frames_from_video_async(video_path, output_folder, KPS, projec
     files_to_upload = []
     interval_len = 6
     interval_count = 0
+    gemini_called = False
+    initial_call = True
 
     while(True):
-        ret, frame = cap.read()
+        if initial_call:
+            # sleep(10)
+            initial_call = False
+        if gemini_called:
+            for i in range(240):
+                ret, frame = cap.read()
+                gemini_called = False
+        else:
+            ret, frame = cap.read()
+                
         if not ret:
             break
         if curr_frame % hop == 0:
@@ -204,6 +214,7 @@ async def capture_frames_from_video_async(video_path, output_folder, KPS, projec
             # When interval_len frames have accumulated, call gemini
             if interval_count%interval_len==0:
                 response = await asyncio.create_task(gemini_call_async(files_to_upload[-interval_len:], diagrams_lst, diagram_desc, procedure_doc, project_name, interval_count, executor))
+                gemini_called = True
                 yield response
         curr_frame += 1
 
@@ -211,9 +222,9 @@ async def capture_frames_from_video_async(video_path, output_folder, KPS, projec
             break
         
     cap.release()
-    cv2.destroyAllWindows()
+    cv2.destroyAllWindows()    
 
-async def analyze_video_async(project_name):
+async def analyze_video_async(project_name,file_loc):
     json_file_path = 'env.json'
     video_path = f"data/video/{project_name}.mp4"
     print(f"{project_name}")
@@ -230,7 +241,8 @@ async def analyze_video_async(project_name):
 
     executor = ThreadPoolExecutor(max_workers=4)
     try:
-        async for response in capture_frames_from_video_async(video_path, output_folder, KPS, project_name, executor): 
+        async for response in capture_frames_from_video_async(video_path, output_folder, KPS, project_name, executor, file_loc): 
+            # print(response)
             yield (response,True)
     finally:
         executor.shutdown()
