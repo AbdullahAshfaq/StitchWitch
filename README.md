@@ -70,3 +70,6 @@ This project deepened our understanding of AI deployment and computer vision in 
 - **reflex**
 
 ---
+
+## **Learn More**
+For additional details about StitchWitch, visit our Devpost page: [StitchWitch on Devpost](https://devpost.com/software/stitchwitch)
